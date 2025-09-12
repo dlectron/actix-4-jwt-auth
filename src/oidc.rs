@@ -95,7 +95,7 @@ impl Oidc {
     ///
     /// The given issuer_url will be extended with ./well-known/openid-configuration in order to
     /// fetch the configuration and use the jwks_uri property to retrieve the keys used for validation.actix_rt
-    async fn new_from_issuer(
+    pub async fn new_from_issuer(
         issuer_url: &str,
         token_lookup: TokenLookup,
     ) -> Result<Self, OIDCValidationError> {
@@ -106,7 +106,7 @@ impl Oidc {
     }
 
     /// When you need the validator created with a specified key URL
-    async fn new_with_keys(
+    pub async fn new_with_keys(
         key_url: &str,
         token_lookup: TokenLookup,
     ) -> Result<Self, OIDCValidationError> {
@@ -115,7 +115,7 @@ impl Oidc {
     }
 
     /// Use your own JSWKSet directly
-    fn new_for_jwks(
+    pub fn new_for_jwks(
         jwks: JWKSet<Empty>,
         token_lookup: TokenLookup,
     ) -> Result<Self, OIDCValidationError> {
