@@ -24,13 +24,9 @@ impl<T: for<'de> Deserialize<'de>> AuthenticatedUser<T> {
     /// Gets the claims from the access token
     /// This will return a complete claimset that contains all the claims found inside the token
     /// as Serde Json Value.
-    fn get_claims(
-        claims_set: &ClaimsSet<Value>
-    ) -> T
-    {
-        let json_value = serde_json::to_value(claims_set).unwrap();
-        let authenticated_user: T = serde_json::from_value(json_value).unwrap();
-        authenticated_user
+    fn get_claims(claims_set: &ClaimsSet<Value>) -> Result<T, serde_json::Error> {
+        let json_value = serde_json::to_value(claims_set)?;
+        serde_json::from_value::<T>(json_value)
     }
 }
 
@@ -44,7 +40,7 @@ impl<T: for<'de> Deserialize<'de>> FromRequest for AuthenticatedUser<T> {
         Box::pin(async move {
             let decoded_info = DecodedInfo::from_request(&req_local, &mut payload_local).await?;
 
-            let claims = AuthenticatedUser::<T>::get_claims(&decoded_info.payload);
+            let claims = AuthenticatedUser::<T>::get_claims(&decoded_info.payload)?;
             Ok(AuthenticatedUser {
                 jwt: decoded_info.jwt.clone(),
                 claims,

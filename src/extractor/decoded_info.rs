@@ -1,6 +1,4 @@
-use std::str::FromStr;
-
-use actix_web::{dev::Payload, http::header::HeaderName, Error, FromRequest, HttpRequest};
+use actix_web::{dev::Payload, Error, FromRequest, HttpRequest};
 use biscuit::ClaimsSet;
 use futures_util::future::{ok, ready, Ready};
 use serde::{Deserialize, Serialize};
@@ -31,8 +29,11 @@ impl FromRequest for DecodedInfo {
         let authorization = match &oidc.token_lookup {
             TokenLookup::Header(key) => {
                 prefix = "Bearer ";
-                match req.headers().get(HeaderName::from_str(key).unwrap()) {
-                    Some(value) => value.to_str().unwrap().to_string(),
+                match req.headers().get(key.as_ref()) {
+                    Some(value) => match value.to_str() {
+                        Ok(token) => token.to_string(),
+                        Err(_) => return ready(Err(OIDCValidationError::BearerNotComplete.into())),
+                    },
                     None => return ready(Err(OIDCValidationError::Unauthorized.into())),
                 }
             }
