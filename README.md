@@ -2,10 +2,24 @@
 
 In order to make use of this crate, you can add it to your Cargo.toml
 
-This crate is build with actix-4.
+This crate is build with actix-4 and rustls 0.20.
 
 ```
-actix-4-jwt-auth = "1.2.0"
+actix-4-jwt-auth = "1.2.8"
+```
+
+You can also enable the compilation with rustls 0.23 by enabling any of the features below:
+
+```
+rustls-0_23
+rustls-0_23-webpki-roots
+rustls-0_23-native-roots
+```
+
+Example:
+
+```
+actix-4-jwt-auth = { version = "1.2.8", default-features = false, features = ["rustls-0_23-webpki-roots"] }
 ```
 
 Or when you like to use the latest as found on github:
