@@ -26,7 +26,7 @@ rustls-0_23-native-roots = ["tls-rustls-0_23", "actix-web/rustls-0_23", "awc/rus
 
 [dependencies]
 actix-web = { package = "actix-web", version="4", optional = true }
-biscuit = "0.7.0"
+biscuit = "0.8.0"
 #biscuit = { path = "../biscuit/" }
 futures = "0.3.31"
 futures-core = {version = "0.3.31", default-features = false, features = ["alloc"]}
